@@ -1,0 +1,55 @@
+"910"
+{
+	"base"		"base"
+	"title"		"Nine Tenths"
+	"category"	"pvp"
+	"maps"		"^910_|^nten_"
+	"menusystem"	"1"
+	"workshopid" "2926720182"
+
+	"settings"
+	{
+		1
+		{
+			"name"		"910_roundtime_seconds"
+			"text"		"Round Timer (Seconds)"
+			"help"		"How long each round lasts."
+			"type"		"Numeric"
+			"default"	"300"
+		}
+		2
+		{
+			"name"		"910_proprespawn"
+			"text"		"Prop Respawn"
+			"help"		"If enabled, props will spawn throughout the map every so often."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
+
+		3
+		{
+			"name"		"910_proprespawn_time"
+			"text"		"Prop Respawn Time (Seconds)"
+			"help"		"The delay between each prop respawn if prop respawn is enabled."
+			"type"		"Numeric"
+			"default"	"2"
+		}
+		4
+		{
+			"name"		"910_suddendeath"
+			"text"		"Sudden Death"
+			"help"		"If enabled, when a team has every prop on the map the timer will be reduced."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
+
+		5
+		{
+			"name"		"910_suddendeath_time"
+			"text"		"Sudden Death Time (Seconds)"
+			"help"		"What the timer is reduced to if sudden death is enabled."
+			"type"		"Numeric"
+			"default"	"15"
+		}
+	}
+}

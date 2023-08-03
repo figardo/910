@@ -1,0 +1,86 @@
+@include "base.fgd"
+
+// 
+@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = gmod_player_start : "gmod player start! (Nine Tenths: The primary spawn point. Select which team should spawn here in the flags.)"
+[
+
+	spawnflags(flags) =
+	[
+		1 : "Blue Team" : 0
+		2 : "Yellow Team" : 0
+		4 : "Green Team" : 0
+		8 : "Red Team" : 0
+	]
+	
+	MaterialOverride(string) : "Material Override" : "" : "Leave blank for no override"
+	
+]
+
+@SolidClass base(Trigger) = nten_teambase :
+	"Props in this zone will contribute towards a team's score."
+[
+	team(choices) : "Team" : "Team" =
+	[
+		0 : "Blue Team"
+		1 : "Yellow Team"
+		2 : "Red Team"
+		3 : "Green Team"
+	]
+]
+
+@PointClass base(Targetname) = nten_mapsettings : 
+	"Changes the gamemode settings for this map. Will take priority by default, but the server can overwrite any of these settings if it wants to."
+[
+	
+	HUD(Choices) : "Default HUD" : 0 : "If a client has 910_hud set to 0, this HUD will show for them." =
+	[
+		0 : "Garry's Mod 9"
+		1 : "Sourcemod"
+		2 : "Fretta"
+	]
+
+	RoundLength(integer) : "Round Length" : -1 : "Round length (in seconds)"
+	WinLength(integer) : "Win Length" : -1 : "Amount of time (in seconds) that you have to hold all items to be declared winner"
+
+	PropRespawnLength(integer) : "Prop Respawn Length" : -1 : "Amount of time (in seconds) until a random info_prop is picked to spawn a prop at."
+	WeaponRespawnLength(integer) : "Weapon Respawn Length" : -1 : "If HL2DM weapons are placed, they will respawn after this many seconds."
+
+	FrettaMovement(Choices) : "Enable Faster (Fretta) Movement" : -1 : "If enabled, movement speed is increased to 400u/s and increases when jumping." =
+	[
+		-1 : "Server Choice"
+		0 : "Disabled"
+		1 : "Enabled"
+	]
+
+	EnableCrowbar(Choices) : "Give Crowbar" : -1 : "Should players receive a crowbar when they spawn?" =
+	[
+		-1 : "Server Choice"
+		0 : "No Crowbar"
+		1 : "Give Crowbar"
+	]
+
+	LargePropScore(Choices) : "Large Prop Double Score" : -1 : "Should large props (dumpsters, vending machines, etc) give double points?" =
+	[
+		-1 : "Server Choice"
+		0 : "Disabled"
+		1 : "Enabled"
+	]
+
+	CoolFX(Choices) : "Cool FX" : -1 : "Show a particle effect when props enter or exit a base." =
+	[
+		-1 : "Server Choice"
+		0 : "Disabled"
+		1 : "Enabled"
+	]
+]
+
+@PointClass base(Targetname) = info_prop : 
+	"The gamemode will pick one of these entities at random to spawn a prop at every 2 seconds by default."
+[
+	spawnflags(flags) =
+	[
+		1 : "Disable Large Props" : 0
+		2 : "Disable Explosive Props" : 0
+		4 : "Disable Health Spawns" : 0
+	]
+]
