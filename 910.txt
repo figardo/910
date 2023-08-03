@@ -12,12 +12,22 @@
 		1
 		{
 			"name"		"910_roundtime_seconds"
-			"text"		"Round Timer (Seconds)"
+			"text"		"Round Timer"
 			"help"		"How long each round lasts."
 			"type"		"Numeric"
 			"default"	"300"
 		}
+
 		2
+		{
+			"name"		"910_rounds"
+			"text"		"Total Rounds"
+			"help"		"If MapVote is enabled, call one after this many rounds."
+			"type"		"Numeric"
+			"default"	"5"
+		}
+
+		3
 		{
 			"name"		"910_proprespawn"
 			"text"		"Prop Respawn"
@@ -26,15 +36,16 @@
 			"default"	"0"
 		}
 
-		3
+		4
 		{
 			"name"		"910_proprespawn_time"
-			"text"		"Prop Respawn Time (Seconds)"
+			"text"		"Prop Respawn Time"
 			"help"		"The delay between each prop respawn if prop respawn is enabled."
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		4
+
+		5
 		{
 			"name"		"910_suddendeath"
 			"text"		"Sudden Death"
@@ -43,13 +54,103 @@
 			"default"	"0"
 		}
 
-		5
+		6
 		{
 			"name"		"910_suddendeath_time"
-			"text"		"Sudden Death Time (Seconds)"
+			"text"		"Sudden Death Time"
 			"help"		"What the timer is reduced to if sudden death is enabled."
 			"type"		"Numeric"
 			"default"	"15"
+		}
+
+		7
+		{
+			"name"		"910_coolfx"
+			"text"		"Cool Effects"
+			"help"		"Enables sparkles when a prop enters or leaves a base."
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+
+		8
+		{
+			"name"		"910_force_autoselect"
+			"text"		"Force Auto-Select"
+			"help"		"Forces players to choose the team with the least players when they join."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
+
+		9
+		{
+			"name"		"910_largeprop"
+			"text"		"x2 Large Prop Points"
+			"help"		"Receive double points when capturing a large prop (dumpster, vending machine, etc)."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
+
+		10
+		{
+			"name"		"910_postround_time"
+			"text"		"Post Round Time"
+			"help"		"How long after a round ends before a new one begins."
+			"type"		"Numeric"
+			"default"	"7"
+		}
+
+		11
+		{
+			"name"		"910_proprespawn"
+			"text"		"Prop Respawn Mode"
+			"help"		"Replaces all fixed prop spawns with prop spawners."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
+
+		12
+		{
+			"name"		"910_proprespawn_time"
+			"text"		"Prop Respawn Time"
+			"help"		"The time between prop respawns."
+			"type"		"Numeric"
+			"default"	"2"
+		}
+
+		13
+		{
+			"name"		"910_removeweapons"
+			"text"		"Remove Weapons"
+			"help"		"Deletes all HL2 weapon spawns on map start."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
+
+		14
+		{
+			"name"		"910_weprespawn"
+			"text"		"Weapon Respawn Time"
+			"help"		"The time after a HL2 weapon is picked up before it respawns."
+			"type"		"Numeric"
+			"default"	"20"
+		}
+
+		15
+		{
+			"name"		"910_proprespawn_time"
+			"text"		"Prop Respawn Time"
+			"help"		"The time between prop respawns."
+			"type"		"Numeric"
+			"default"	"2"
+		}
+
+		16
+		{
+			"name"		"910_teamplay"
+			"text"		"Teamplay Mode"
+			"help"		"Enables team based mode. Disable for FFA prop deathmatch."
+			"type"		"CheckBox"
+			"default"	"1"
 		}
 	}
 }
