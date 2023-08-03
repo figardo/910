@@ -4,7 +4,7 @@ The Nine Tenths Sourcemod, GMod 9 gamemode, and Fretta gamemode. Ported to GMod 
 
 ## Download
 
-[Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2900976037)
+[Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3014338850)
 
 ## Contribution
 
