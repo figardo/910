@@ -5,7 +5,7 @@
 	"category"	"pvp"
 	"maps"		"^910_|^nten_"
 	"menusystem"	"1"
-	"workshopid" "2926720182"
+	"workshopid" "3014338850"
 
 	"settings"
 	{
