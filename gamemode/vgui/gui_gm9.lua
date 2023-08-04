@@ -164,6 +164,7 @@ function GM9:CreateTeamPanel(parent, x, y)
 	text:SetFont("LegacyDefault")
 	text:SetColor(teamColour)
 	text:SetText(teamStr)
+	text:SizeToContentsX() -- cyrillic fix
 
 	text.Think = function(s)
 		local newTeam = ply:Team()
