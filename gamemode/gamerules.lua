@@ -3,8 +3,9 @@ function GM:DoRoundTimer()
 
 	if iTimeLeft > 0 or timer.Exists("910_RestartTimer") or self.bEndGame then return end
 
-	for _, ply in ipairs(player.GetAll()) do
-		ply:Freeze(true)
+	local allplys = player.GetAll()
+	for i = 1, #allplys do
+		allplys[i]:Freeze(true)
 	end
 
 	local winners = {}
@@ -27,6 +28,11 @@ function GM:DoRoundTimer()
 		for i = 1, #winners do
 			local winner = winners[i]
 			net.WriteUInt(winner - 1, 3)
+
+			local plys = team.GetPlayers(i)
+			for j = 1, #plys do
+				plys[j]:AddWins(1)
+			end
 		end
 	net.Broadcast()
 

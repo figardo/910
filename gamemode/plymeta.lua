@@ -23,3 +23,15 @@ end
 function PLAYER:AddSteals(num)
 	self:SetSteals(self:GetSteals() + 1)
 end
+
+function PLAYER:SetWins(num)
+	self:SetNWInt("910_Wins", num)
+end
+
+function PLAYER:GetWins()
+	return self:GetNWInt("910_Wins", 0)
+end
+
+function PLAYER:AddWins(num)
+	self:SetWins(self:GetWins() + num)
+end
