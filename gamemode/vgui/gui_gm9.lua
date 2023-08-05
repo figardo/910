@@ -164,7 +164,7 @@ function GM9:CreateTeamPanel(parent, x, y)
 	text:SetFont("LegacyDefault")
 	text:SetColor(teamColour)
 	text:SetText(teamStr)
-	text:SizeToContentsX() -- cyrillic fix
+	text:SizeToContentsX()
 
 	text.Think = function(s)
 		local newTeam = ply:Team()
@@ -184,6 +184,7 @@ function GM9:CreateTeamPanel(parent, x, y)
 		local pnlWidth = surface_GetTextSize(newTeamStr) + (x * 0.0195)
 
 		pnl:SetSize(pnlWidth, y2)
+		s:SizeToContentsX()
 	end
 
 	return pnl
