@@ -21,11 +21,11 @@ local orange = Color(255, 177, 0)
 local selfCol = 125
 
 local stats = {
-	{title = "#NineTenths.Score", fn = function(ply) return ply:Frags() end},
-	{title = "Objects", fn = function(ply) return ply:GetDeliveries() end},
-	{title = "Steals", fn = function(ply) return ply:GetSteals() end},
-	{title = "Deaths", fn = function(ply) return ply:Deaths() end},
-	{title = "Latency", fn = function(ply) return ply:Ping() end}
+	{title = "#NineTenths.NumWins", fn = function(ply) return ply:GetWins() end},
+	{title = "#NineTenths.Delivered", fn = function(ply) return ply:GetDeliveries() end},
+	{title = "#NineTenths.Stolen", fn = function(ply) return ply:GetSteals() end},
+	{title = "#NineTenths.KillDeath", fn = function(ply) return tostring(ply:Frags()) .. "/" .. ply:Deaths() end},
+	{title = "#NineTenths.Latency", fn = function(ply) return ply:Ping() end}
 }
 
 local teamColours = {
@@ -81,14 +81,25 @@ local function CreatePlayerPanel(parent, ply, teamID)
 	for i = 1, #stats do
 		local curVal = stats[i].fn(ply)
 
+		surface.SetFont("LegacyDefaultThin")
+		local width = surface.GetTextSize(stats[i].title)
+
+		local margin = 50
+		local max = 80
+
+		if width >= max then
+			local diff = width - max
+			margin = math.Clamp(margin - diff, 0, 50)
+		end
+
 		local statLabel = vgui_Create("DLabel", plyStats)
 		statLabel:SetFont(font)
 		statLabel:SetColor(colour)
 		statLabel:SetText(curVal)
 
 		statLabel:Dock(LEFT)
-		statLabel:DockMargin(90, 0, 10, 0)
 		statLabel:SizeToContentsX()
+		statLabel:DockMargin(margin + width - statLabel:GetWide(), 0, 0, 0)
 
 		statLabel.Think = function(s)
 			local newVal = stats[i].fn(ply)
@@ -168,9 +179,20 @@ function GM:CreateTeamPanel(parent, id)
 	scoreLabel:SetColor(colour)
 	scoreLabel:SetText(teamScore)
 
+	surface.SetFont("LegacyDefaultThin")
+	local width = surface.GetTextSize(stats[1].title)
+
+	local margin = 50
+	local max = 80
+
+	if width >= max then
+		local diff = width - max
+		margin = math.Clamp(margin - diff, 0, 50)
+	end
+
 	scoreLabel:Dock(LEFT)
-	scoreLabel:DockMargin(95, 0, 15, 0)
 	scoreLabel:SizeToContentsX()
+	scoreLabel:DockMargin(margin + width - scoreLabel:GetWide(), 0, 0, 0)
 
 	scoreLabel.Think = function(s)
 		local newVal = team.GetScore(id)
@@ -189,9 +211,18 @@ function GM:CreateTeamPanel(parent, id)
 	objectsLabel:SetColor(colour)
 	objectsLabel:SetText(teamObjects)
 
+	width = surface.GetTextSize(stats[2].title)
+
+	margin = 50
+
+	if width >= max then
+		local diff = width - max
+		margin = math.Clamp(margin - diff, 0, 50)
+	end
+
 	objectsLabel:Dock(LEFT)
-	objectsLabel:DockMargin(95, 0, 15, 0)
 	objectsLabel:SizeToContentsX()
+	objectsLabel:DockMargin(margin + width - objectsLabel:GetWide(), 0, 0, 0)
 
 	objectsLabel.Think = function(s)
 		local newVal = self.ItemCount[id]
@@ -292,12 +323,23 @@ function GM:ScoreboardShow()
 	for i = 1, #stats do
 		local name = stats[i].title
 
+		surface.SetFont("LegacyDefaultThin")
+		local width = surface.GetTextSize(name)
+
+		local margin = 50
+		local max = 80
+
+		if width >= max then
+			local diff = width - max
+			margin = math.Clamp(margin - diff, 0, 50)
+		end
+
 		local statLabel = vgui_Create("DLabel", topStats)
 		statLabel:Dock(LEFT)
 		statLabel:SetFont("LegacyDefaultThin")
 		statLabel:SetColor(orange)
 		statLabel:SetText(name)
-		statLabel:DockMargin(50, 0, 0, 0)
+		statLabel:DockMargin(margin, 0, 0, 0)
 		statLabel:SizeToContentsX()
 	end
 
