@@ -21,7 +21,16 @@ ENT.CoolFX = -1
 
 ENT.Teamplay = -1
 
+local hammerShit = {
+	["origin"] = true,
+	["classname"] = true,
+	["hammerid"] = true
+}
+
 function ENT:KeyValue(k, v)
 	self[k] = tonumber(v)
+
+	if hammerShit[k] then return end
+
 	DevPrint("Map settings set " .. k .. " to " .. v)
 end
