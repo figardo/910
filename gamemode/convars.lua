@@ -18,6 +18,10 @@ local largePropScore = CreateConVar("910_largeprop", "0", FCVAR_NOTIFY, "If enab
 
 local coolFX = CreateConVar("910_coolfx", "1", FCVAR_NOTIFY, "Enables cool particle effects when scoring points.", 0, 1)
 
+local fastMode = CreateConVar("910_fastmovement", "0", FCVAR_ARCHIVE, "Increase movement speed to 400u/s and disable sprinting.", 0, 1)
+
+local disableCrowbar = CreateConVar("910_disablecrowbar", "0", FCVAR_ARCHIVE, "Don't give the crowbar to players when they spawn.", 0, 1)
+
 function GM:ProcessConVarNum(setting, convar)
 	if !override_mapsettings:GetBool() and self.MAP_SETTINGS and self.MAP_SETTINGS[setting] > -1 then
 		return self.MAP_SETTINGS[setting]
@@ -30,12 +34,17 @@ function GM:ProcessConVarNum(setting, convar)
 	return convar
 end
 
-function GM:ProcessConVarBool(setting, convar)
-	if !override_mapsettings:GetBool() and self.MAP_SETTINGS then
+function GM:ProcessConVarBool(setting, convar, invertDefault)
+	if !override_mapsettings:GetBool() and self.MAP_SETTINGS and self.MAP_SETTINGS[setting] > -1 then
 		return self.MAP_SETTINGS[setting] == 1
 	end
 
-	return convar:GetBool()
+	local default = convar:GetBool()
+	if invertDefault then
+		return !default
+	else
+		return default
+	end
 end
 
 function GM:ResetValues()
@@ -53,6 +62,10 @@ function GM:ResetValues()
 	self.LARGE_PROP_SCORE = self:ProcessConVarBool("LargePropScore", largePropScore)
 
 	self.COOL_FX = self:ProcessConVarBool("CoolFX", coolFX)
+
+	self.FAST_MODE = self:ProcessConVarBool("FrettaMovement", fastMode)
+
+	self.CROWBAR_ENABLED = self:ProcessConVarBool("EnableCrowbar", disableCrowbar, true)
 end
 cvars_AddChangeCallback("910_override_mapsettings", function() GAMEMODE:ResetValues() end)
 cvars_AddChangeCallback("910_roundtime_seconds", function() GAMEMODE:ResetValues() end)
@@ -65,3 +78,5 @@ cvars_AddChangeCallback("910_postround_time", function() GAMEMODE:ResetValues() 
 cvars_AddChangeCallback("910_teamplay", function() GAMEMODE:ResetValues() end)
 cvars_AddChangeCallback("910_largeprop", function() GAMEMODE:ResetValues() end)
 cvars_AddChangeCallback("910_coolfx", function() GAMEMODE:ResetValues() end)
+cvars_AddChangeCallback("910_disablecrowbar", function() GAMEMODE:ResetValues() end)
+cvars_AddChangeCallback("910_fastmovement", function() GAMEMODE:ResetValues() end)
