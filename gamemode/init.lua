@@ -223,7 +223,7 @@ end
 function GM:PlayerLoadout(ply)
 	if ply:Team() == TEAM_SPECTATOR then return end
 
-	if !self:IsFretta() then
+	if !self:IsFretta() and self.CROWBAR_ENABLED then
 		ply:Give("weapon_crowbar")
 	end
 
@@ -404,10 +404,18 @@ local forceAutoSelect = CreateConVar("910_force_autoselect", "0", FCVAR_ARCHIVE,
 function GM:PlayerInitialSpawn(ply)
 	ply:SetTeam(TEAM_SPECTATOR)
 
+	local spawnlist = ents.FindByClass("info_player_start")
+	local specSpawn = spawnlist[math.random(#spawnlist)]
+
+	timer.Simple(0, function()
+		ply:SetPos(specSpawn:GetPos())
+		ply:SetAngles(specSpawn:GetAngles())
+	end)
+
 	self:PlayerSpawnChooseModel(ply)
 
 	local walk, sprint = 190, 330
-	if self:IsFretta() then
+	if self:IsFretta() or self.FAST_MODE then
 		walk, sprint = 400, 400
 	end
 
@@ -430,8 +438,6 @@ function GM:PlayerInitialSpawn(ply)
 				self:ShowTeam(ply)
 			end
 		end)
-
-		ply:SetPos(Vector(0, 0, 0))
 	end)
 end
 
@@ -520,6 +526,8 @@ local lastSpawn = {}
 function GM:PlayerSelectTeamSpawn(tid, ply)
 	local spawnlist = {}
 
+	if tid == TEAM_SPECTATOR then return end
+
 	if self:IsSourcemod() then
 		local ent = tid == 1 and "info_player_blueteam" or "info_player_redteam"
 		spawnlist = ents.FindByClass(ent)
@@ -529,7 +537,7 @@ function GM:PlayerSelectTeamSpawn(tid, ply)
 	else
 		local activeTeam = tid
 
-		if tid != TEAM_SPECTATOR and self.ActiveTeams and #self.ActiveTeams > 0 then
+		if self.ActiveTeams and #self.ActiveTeams > 0 then
 			while !self.ActiveTeams[activeTeam] do
 				activeTeam = activeTeam + 1
 			end
