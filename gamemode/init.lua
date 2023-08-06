@@ -407,9 +407,12 @@ function GM:PlayerInitialSpawn(ply)
 	local spawnlist = ents.FindByClass("info_player_start")
 	local specSpawn = spawnlist[math.random(#spawnlist)]
 
+	local pos = IsValid(specSpawn) and specSpawn:GetPos() or Vector(0, 0, 0)
+	local ang = IsValid(specSpawn) and specSpawn:GetAngles() or Angle(0, 0, 0)
+
 	timer.Simple(0, function()
-		ply:SetPos(specSpawn:GetPos())
-		ply:SetAngles(specSpawn:GetAngles())
+		ply:SetPos(pos)
+		ply:SetAngles(ang)
 	end)
 
 	self:PlayerSpawnChooseModel(ply)
