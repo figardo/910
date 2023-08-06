@@ -95,7 +95,7 @@ end
 
 local unsupported = {
 	["bg"] = "Не се поддържа български език. Допринесете тук:",
-	["cz"] = "Čeština není podporována. Přispějte zde:",
+	-- ["cz"] = "Čeština není podporována. Přispějte zde:",
 	["el"] = "Η ελληνική γλώσσα δεν υποστηρίζεται. Συμβάλετε εδώ:",
 	-- ["en-pt"] = "YARRRGH! This ship be docked fer now matey! Help us steer her here:",
 	["et"] = "Eesti keel toetamata. Anna oma panus siin:",
