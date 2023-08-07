@@ -365,6 +365,8 @@ function GM:InitPostEntity()
 end
 
 function GM:ScalePlayerDamage(ply, hitgroup, dmginfo)
+	if !ply:IsPlayer() then return end
+
 	if IsValid(dmginfo:GetAttacker()) and ply:Team() == dmginfo:GetAttacker():Team() then
 		dmginfo:ScaleDamage(0)
 		return
