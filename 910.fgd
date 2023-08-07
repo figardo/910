@@ -34,9 +34,10 @@
 	
 	HUD(Choices) : "Default HUD" : 0 : "If a client has 910_hud set to 0, this HUD will show for them." =
 	[
-		0 : "Garry's Mod 9"
-		1 : "Sourcemod"
-		2 : "Fretta"
+		1 : "Garry's Mod 9"
+		2 : "Sourcemod"
+		3 : "Fretta"
+		4 : "Garry's Mod 10"
 	]
 
 	RoundLength(integer) : "Round Length" : -1 : "Round length (in seconds)"
