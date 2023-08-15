@@ -102,7 +102,7 @@ function GM:DoSuddenDeath()
 
 	local tempcheck = false
 
-	if (shouldSuddenDeath:GetBool() or self:IsSourcemod()) and timeLeft > 0 and !self:IsFretta() then
+	if (shouldSuddenDeath:GetBool() or self:IsSourcemod() or suddenDeathInt > -1) and timeLeft > 0 and !self:IsFretta() then
 		for i = 1, #self.ItemCount do
 			if #self.PropCache > self.ItemCount[i] then continue end -- does this team have every prop in the map?
 
