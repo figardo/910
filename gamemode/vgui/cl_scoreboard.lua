@@ -38,6 +38,8 @@ local teamColours = {
 }
 
 local function CreatePlayerPanel(parent, ply, teamID)
+	if !IsValid(ply) then return end
+
 	local isSelf = ply == LocalPlayer()
 
 	local height = ScrH() * 0.027
