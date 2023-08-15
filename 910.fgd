@@ -37,7 +37,6 @@
 		1 : "Garry's Mod 9"
 		2 : "Sourcemod"
 		3 : "Fretta"
-		4 : "Garry's Mod 10"
 	]
 
 	RoundLength(integer) : "Round Length" : -1 : "Round length (in seconds)"
