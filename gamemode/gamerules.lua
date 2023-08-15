@@ -274,7 +274,8 @@ function GM:RoundRestart(firstRestart)
 		ply:Freeze(false)
 
 		-- Reset indivdual scores to 0
-		ply:SetFrags(0)
+		ply:SetDeliveries(0)
+		ply:SetSteals(0)
 	end
 
 	if !self.ActiveTeams then return end
