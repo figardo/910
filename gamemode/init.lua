@@ -409,6 +409,7 @@ local forceAutoSelect = CreateConVar("910_force_autoselect", "0", FCVAR_ARCHIVE,
 
 function GM:PlayerInitialSpawn(ply)
 	ply:SetTeam(TEAM_SPECTATOR)
+	ply:SetCustomCollisionCheck(true)
 
 	local spawnlist = ents.FindByClass("info_player_start")
 	local specSpawn = spawnlist[math.random(#spawnlist)]

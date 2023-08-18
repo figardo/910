@@ -10,6 +10,14 @@ GM.Teams = { -- if you want more than 4 teams you are deranged
 	{"#NineTenths.GreenTeam", Color(0, 255, 0)}
 }
 
+function GM:ShouldCollide(ent1, ent2)
+	if !ent1:IsPlayer() or !ent2:IsPlayer() then return true end
+
+	if ent1:Team() == ent2:Team() then return false end
+
+	return true
+end
+
 function LerpColor(delta, from, to)
 	local r = Lerp(delta, from.r, to.r)
 	local g = Lerp(delta, from.g, to.g)
