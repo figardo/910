@@ -94,7 +94,7 @@ function GM:GenerateFonts()
 end
 
 local unsupported = {
-	["bg"] = "Не се поддържа български език. Допринесете тук:",
+	-- ["bg"] = "Не се поддържа български език. Допринесете тук:",
 	-- ["cs"] = "Čeština není podporována. Přispějte zde:",
 	["el"] = "Η ελληνική γλώσσα δεν υποστηρίζεται. Συμβάλετε εδώ:",
 	-- ["en-pt"] = "YARRRGH! This ship be docked fer now matey! Help us steer her here:",
