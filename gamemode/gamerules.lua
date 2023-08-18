@@ -157,14 +157,20 @@ function GM:AddRespawnableProp(idx, prop)
 	self.RespawnableProps[idx].ang = prop:GetAngles()
 
 	local physobj = prop:GetPhysicsObject()
-	self.RespawnableProps[idx].frozen = IsValid(physobj) and physobj:IsMotionEnabled() or false
+	self.RespawnableProps[idx].frozen = IsValid(physobj) and physobj:IsMotionEnabled()
+	self.RespawnableProps[idx].gravunfreeze = bit.band(prop:GetSpawnFlags(), 64) > 0 -- enable motion when grabbed by gravity gun
 end
 
 function GM:PropRespawn(prop)
-	local iEnt = ents.Create("prop_physics")
+	local iEnt = ents.Create("prop_physics_multiplayer")
 		iEnt:SetModel(prop.model) -- the model will already be precached
 		iEnt:SetPos(prop.pos)
 		iEnt:SetAngles(prop.ang)
+
+		if prop.gravunfreeze then
+			iEnt:SetKeyValue("spawnflags", 64)
+		end
+
 	iEnt:Spawn()
 
 	iEnt:GetPhysicsObject():EnableMotion(prop.frozen)
