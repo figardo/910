@@ -95,6 +95,8 @@ local respawningIndexes = {}
 local shouldSuddenDeath = CreateConVar("910_suddendeath", "0", FCVAR_NOTIFY, "If enabled, cut timer down to x seconds when one team has all props in a map.", 0, 1)
 
 function GM:DoSuddenDeath()
+	if #self.PropCache == 0 or #self.InfoProps > 0 then return end
+
 	local roundEnd = GetGlobalFloat("fRoundEnd")
 	local suddenDeathInt = self.SUDDEN_DEATH_TIME
 
@@ -355,7 +357,9 @@ function GM:InitPostEntity()
 		end
 	end
 
-	if #ents.FindByClass("info_prop") > 0 then
+	self.InfoProps = ents.FindByClass("info_prop")
+
+	if #self.InfoProps > 0 then
 		timer.Create("SpawnProps", self.PROP_RESPAWN_TIME, 0, function() GAMEMODE:SpawnProps() end)
 	end
 

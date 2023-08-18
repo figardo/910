@@ -83,7 +83,7 @@ end
 local blockers = {"player", "info_base_blue", "info_base_yellow", "gmod_player_start"}
 function GM:LocateSpawn()
 	-- Find a spawn that isn't blocked
-	local spawn = table.Random( ents.FindByClass( "info_prop" ) )
+	local spawn = table.Random( self.InfoProps )
 	for _, v in ipairs(ents.FindInSphere( spawn:GetPos(), 64 )) do
 		if table.HasValue( blockers, v:GetClass() ) then
 			spawn = self:LocateSpawn()
@@ -96,7 +96,7 @@ end
 -- Randomly spawn props
 function GM:SpawnProps()
 	-- No spawnpoints
-	if #ents.FindByClass( "info_prop" ) <= 0 then
+	if #self.InfoProps <= 0 then
 		--GAMEMODE:CreateSpawns()
 		return
 	end
