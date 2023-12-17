@@ -153,7 +153,7 @@ function GM:CreateTeamPanel(parent, id)
 		surface_DrawLine(7, h - 1, w - 7, h - 1)
 	end
 
-	local txt = language.GetPhrase(team.GetName(id)) .. "   -   " .. #plys .. " players"
+	local txt = language.GetPhrase(team.GetName(id)) .. "   -   " .. string.format(language.GetPhrase("NineTenths.Players"), #plys)
 
 	local textPnl = vgui.Create("DLabel", teamPnl)
 	textPnl:SetText(txt)
