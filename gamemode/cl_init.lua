@@ -14,7 +14,7 @@ CreateClientConVar("910_model", "", true, true, "Set your playermodel.")
 function GM:GenerateFonts()
 	surface.CreateFont("ImpactMassive", {
 		font = "Impact",
-		size = ScreenScale(17.5),
+		size = ScreenScaleH(23.333),
 		weight = 200,
 		antialias = true,
 		extended = true
@@ -22,7 +22,7 @@ function GM:GenerateFonts()
 
 	surface.CreateFont("DefaultShadow", {
 		font = "Verdana",
-		size = ScreenScale(6),
+		size = ScreenScaleH(8),
 		weight = 700,
 		antialias = true,
 		shadow = true,
@@ -31,7 +31,7 @@ function GM:GenerateFonts()
 
 	surface.CreateFont("LegacyDefault", {
 		font = "Verdana",
-		size = ScreenScale(6),
+		size = ScreenScaleH(8),
 		weight = 700,
 		antialias = true,
 		extended = true
@@ -39,7 +39,7 @@ function GM:GenerateFonts()
 
 	surface.CreateFont("LegacyDefaultThin", {
 		font = "Verdana",
-		size = ScreenScale(6),
+		size = ScreenScaleH(8),
 		weight = 500,
 		antialias = true,
 		extended = true
@@ -47,26 +47,26 @@ function GM:GenerateFonts()
 
 	surface.CreateFont("SourcemodScore", {
 		font = "Tahoma Bold",
-		size = ScreenScale(25),
+		size = ScreenScaleH(33.333),
 		antialias = true
 	})
 
 	surface.CreateFont("SourcemodTime", {
 		font = "Tahoma Bold",
-		size = ScreenScale(26.75),
+		size = ScreenScaleH(35.666),
 		antialias = true
 	})
 
 	surface.CreateFont("SourcemodWin", {
 		font = "Tahoma Bold",
-		size = ScreenScale(31.75),
+		size = ScreenScaleH(42.333),
 		antialias = true,
 		extended = true
 	})
 
 	surface.CreateFont("SourcemodWinScores", {
 		font = "Trebuchet MS",
-		size = ScreenScale(18),
+		size = ScreenScaleH(24),
 		weight = 700,
 		antialias = true,
 		extended = true
@@ -138,11 +138,6 @@ function GM:InitPostEntity()
 		chat.AddText("This map will have missing textures because you don't have Half-Life 2: Episode Two mounted.")
 	end
 
-	local shitfix = vgui.Create("DPanel") -- YOU AGAIN
-	shitfix:SetPos(0, 0)
-	shitfix:SetSize(1, 1)
-	timer.Simple(7, function() shitfix:Remove() end)
-
 	local w = ScrW()
 	local h = ScrH()
 
@@ -151,9 +146,10 @@ function GM:InitPostEntity()
 	title:SetSize(w * 0.35, h * 0.4)
 	title:SetPos(w * 0.325, h * 0.3)
 
-	title:AlphaTo(0, 1.5, 3, function(_, pnl) pnl:Remove() end) -- this doesn't work for whatever reason but it removes the panel at least
+	title:AlphaTo(0, 1.5, 3, function(_, pnl) pnl:Remove() end)
 
 	title.Paint = function(s, x, y)
+		surface.SetDrawColor(255,255,255)
 		surface.SetMaterial(titlemat)
 
 		s:DrawTexturedRect()
