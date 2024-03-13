@@ -130,8 +130,8 @@ function GM:InitPostEntity()
 
 	local lang = GetConVar("gmod_language"):GetString():lower()
 	if unsupported[lang] then
-		ply:ChatPrint("Selected language is unsupported. Contribute here: https://crowdin.com/project/melonracer")
-		ply:ChatPrint(unsupported[lang] .. " https://crowdin.com/project/melonracer")
+		ply:ChatPrint("Selected language is unsupported. Contribute here: https://crowdin.com/project/nine-tenths")
+		ply:ChatPrint(unsupported[lang] .. " https://crowdin.com/project/nine-tenths")
 	end
 
 	if game.GetMap() == "910_scramble" and !IsMounted("ep2") then
