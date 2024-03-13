@@ -186,9 +186,7 @@ function GM:Think()
 				self:StartIntermission()
 			end
 		else
-			local plys = player.GetAll()
-			for i = 1, #plys do
-				local ply = plys[i]
+			for _, ply in player.Iterator() do
 				if !IsValid(ply) or ply:Frags() < FragLimit then continue end
 
 				self:StartIntermission()

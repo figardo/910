@@ -3,9 +3,8 @@ function GM:DoRoundTimer()
 
 	if iTimeLeft > 0 or timer.Exists("910_RestartTimer") or self.bEndGame then return end
 
-	local allplys = player.GetAll()
-	for i = 1, #allplys do
-		allplys[i]:Freeze(true)
+	for _, ply in player.Iterator() do
+		ply:Freeze(true)
 	end
 
 	local winners = {}
@@ -67,10 +66,7 @@ function GM:StartIntermission()
 	self.fIntermissionEnd = CurTime() + GetConVar("mp_chattime"):GetFloat()
 
 	-- Loop through all players
-	local plys = player.GetAll()
-	for i = 1, #plys do
-		local ply = plys[i]
-
+	for _, ply in player.Iterator() do
 		net.Start("910_ShowScoreboard")
 		net.Send(ply)
 
@@ -247,7 +243,8 @@ function GM:TeamsAreUnbalanced()
 	return false
 end
 
-function GM:ShuffleTeams(plys, showmsg)
+function GM:ShuffleTeams(showmsg)
+	local plys = player.GetAll()
 	table.Shuffle(plys)
 
 	for i = 1, #plys do
@@ -264,15 +261,12 @@ function GM:ShuffleTeams(plys, showmsg)
 		end
 	end
 end
-concommand.Add("910_shuffleteams", function() GAMEMODE:ShuffleTeams(player.GetAll(), false) end, nil, "Force every player into a new random team.")
+concommand.Add("910_shuffleteams", function() GAMEMODE:ShuffleTeams(false) end, nil, "Force every player into a new random team.")
 
 function GM:RoundRestart(firstRestart)
 	SetGlobalFloat("fRoundEnd", CurTime() + self.ROUND_LENGTH)
 
-	local plys = player.GetAll()
-	for i = 1, #plys do
-		local ply = plys[i]
-
+	for _, ply in player.Iterator() do
 		-- Unfreeze everyone and respawn all players
 		ply:KillSilent()
 		ply:Spawn()
@@ -297,7 +291,7 @@ function GM:RoundRestart(firstRestart)
 		end
 
 		if self:TeamsAreUnbalanced() then
-			self:ShuffleTeams(plys, true)
+			self:ShuffleTeams(true)
 		end
 	end
 

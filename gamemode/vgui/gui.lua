@@ -144,9 +144,7 @@ end
 local circleMat = Material("SGM/playercircle")
 local circleSize = 48
 function GM:PostDrawOpaqueRenderables() -- gm12 fretta referenced for accurate circle behaviour
-	local plys = player.GetAll()
-	for i = 1, #plys do
-		local ply = plys[i]
+	for _, ply in player.Iterator() do
 		if (ply == LocalPlayer() and !ply:ShouldDrawLocalPlayer()) or !ply:Alive() or ply:Team() == TEAM_SPECTATOR then continue end
 
 		local pos = ply:GetPos()
