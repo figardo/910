@@ -31,20 +31,20 @@ FRETTA = {}
 
 local boxCol = Color(0, 0, 0, 100)
 
-local function PerformFrettaLayout(pnl, xPad, yPad)
-	local w = xPad
+local function PerformFrettaLayout(pnl, xPad, yPad, vertical)
+	local w = vertical and yPad or xPad
 	local tallest = 0
 
 	local children = pnl:GetChildren()
 	for i = 1, #children do
 		local v = children[i]
 
-		v:SetPos(w, yPad / 2)
-		w = w + v:GetWide() + xPad
-		tallest = math_max( tallest, v:GetTall() )
+		v:SetPos(vertical and xPad / 2 or w, vertical and w or yPad / 2)
+		w = w + (vertical and v:GetTall() or v:GetWide()) + (vertical and yPad or xPad)
+		tallest = math_max( tallest, vertical and v:GetWide() or v:GetTall() )
 	end
 
-	pnl:SetSize( w, tallest + yPad )
+	pnl:SetSize( vertical and tallest + xPad or w, vertical and w or tallest + yPad )
 end
 
 function FRETTA:CreateExtraPanel(x, y)
@@ -91,67 +91,163 @@ function FRETTA:CreateScorePanel(parent, x, y)
 		draw_RoundedBox( 4, 0, 0, s:GetWide(), s:GetTall(), boxCol )
 	end
 
+	pnl.PerformLayout = function(s) PerformFrettaLayout(s, 0, 0, true) end
+
+	local topHalf = vgui_Create("DPanel", pnl)
+	topHalf.Paint = nil
+
 	local xPad, yPad = x * 0.0075, y * 0.015
-	pnl.PerformLayout = function(s) PerformFrettaLayout(s, xPad, yPad) end
+	topHalf.PerformLayout = function(s) PerformFrettaLayout(s, xPad, yPad) end
 
-	local BlueScore = vgui_Create("DLabel", pnl)
-	BlueScore:SetFont("FrettaHUDElement")
+	local Score1 = vgui_Create("DLabel", topHalf)
+	Score1:SetFont("FrettaHUDElement")
 
-	local currentScore = GAMEMODE.ItemCount[1] or 0
-	BlueScore:SetText(currentScore)
+	local teamScores = GAMEMODE.ItemCount
 
-	BlueScore:SetColor(teamColours[team_GetName(1)])
-	BlueScore:SizeToContents()
+	local firstScore = teamScores[1] or 0
+	Score1:SetText(firstScore)
 
-	BlueScore.Think = function(s)
-		local newScore = GAMEMODE.ItemCount[1] or 0
+	Score1:SetColor(teamColours[team_GetName(1)])
+	Score1:SizeToContents()
 
-		if currentScore == newScore then return end
+	Score1.Think = function(s)
+		local newScore = teamScores[1] or 0
+
+		if firstScore == newScore then return end
 
 		s:SetText(newScore)
-		currentScore = newScore
+		firstScore = newScore
 		s:SizeToContents()
 	end
 
-	local secondScore = GAMEMODE.ItemCount[2] or 0
+	local secondScore = teamScores[2] or 0
 
-	local PropsText = vgui_Create("DLabel", pnl)
+	local PropsText = vgui_Create("DLabel", topHalf)
 	PropsText:SetFont("FrettaHUDElement")
 
 	local scoreText =  language_GetPhrase("NineTenths.Score")
 
-	PropsText.Think = function(s)
-		local txt
-		if currentScore > secondScore then
-			txt = "< " .. scoreText .. " -"
-		elseif secondScore > currentScore then
-			txt = "- " .. scoreText .. " >"
-		else
-			txt = "- " .. scoreText .. " -"
-		end
-
-		s:SetText(txt)
-		s:SizeToContents()
-	end
-
 	PropsText:SizeToContents()
 
-	local YellowScore = vgui_Create("DLabel", pnl)
-	YellowScore:SetFont("FrettaHUDElement")
+	local Score2 = vgui_Create("DLabel", topHalf)
+	Score2:SetFont("FrettaHUDElement")
 
-	YellowScore:SetText(secondScore)
+	Score2:SetText(secondScore)
 
-	YellowScore:SetColor(teamColours[team_GetName(2)])
-	YellowScore:SizeToContents()
+	Score2:SetColor(teamColours[team_GetName(2)])
+	Score2:SizeToContents()
 
-	YellowScore.Think = function(s)
-		local newScore = GAMEMODE.ItemCount[2] or 0
+	Score2.Think = function(s)
+		local newScore = teamScores[2] or 0
 
 		if secondScore == newScore then return end
 
 		s:SetText(newScore)
 		secondScore = newScore
 		s:SizeToContents()
+	end
+
+	if GAMEMODE.CurrentTeamID > 2 then
+		local bottomHalf = vgui_Create("DPanel", pnl)
+		bottomHalf.Paint = nil
+		bottomHalf.PerformLayout = function(s) PerformFrettaLayout(s, xPad, yPad) end
+
+		local Score3 = vgui_Create("DLabel", bottomHalf)
+		Score3:SetFont("FrettaHUDElement")
+
+		local thirdScore = teamScores[3] or 0
+		Score3:SetText(thirdScore)
+
+		Score3:SetColor(teamColours[team_GetName(3)])
+		Score3:SizeToContents()
+
+		Score3.Think = function(s)
+			local newScore = teamScores[3] or 0
+
+			if thirdScore == newScore then return end
+
+			s:SetText(newScore)
+			thirdScore = newScore
+			s:SizeToContents()
+		end
+
+		local fourthScore = teamScores[4] or 0
+
+		local PropsText2 = vgui_Create("DLabel", bottomHalf)
+		PropsText2:SetFont("FrettaHUDElement")
+
+		PropsText2.Think = function(s)
+			local max = 0
+			local topteam = {}
+			for t, score in ipairs(teamScores) do
+				if score < max then continue end
+
+				if score == max then
+					topteam[t] = true
+
+					continue
+				end
+
+				max = score
+
+				topteam = {[t] = true}
+			end
+
+			local txt
+			local txt2
+
+			if table.Count(topteam) == GAMEMODE.CurrentTeamID then
+				txt = "- " .. scoreText .. " -"
+				txt2 = txt
+			else
+				local first = topteam[1] and "< " or "- "
+				local second = topteam[2] and " >" or " -"
+				txt = first .. scoreText .. second
+
+				first = topteam[3] and "< " or "- "
+				second = topteam[4] and " >" or " -"
+				txt2 = first .. scoreText .. second
+			end
+
+			PropsText:SetText(txt)
+			PropsText:SizeToContents()
+			s:SetText(txt2)
+			s:SizeToContents()
+		end
+
+		PropsText2:SizeToContents()
+
+		local Score4 = vgui_Create("DLabel", bottomHalf)
+		Score4:SetFont("FrettaHUDElement")
+
+		Score4:SetText(fourthScore)
+
+		Score4:SetColor(teamColours[team_GetName(4)])
+		Score4:SizeToContents()
+
+		Score4.Think = function(s)
+			local newScore = teamScores[4] or 0
+
+			if fourthScore == newScore then return end
+
+			s:SetText(newScore)
+			fourthScore = newScore
+			s:SizeToContents()
+		end
+	else
+		PropsText.Think = function(s)
+			local txt
+			if firstScore > secondScore then
+				txt = "< " .. scoreText .. " -"
+			elseif secondScore > firstScore then
+				txt = "- " .. scoreText .. " >"
+			else
+				txt = "- " .. scoreText .. " -"
+			end
+
+			s:SetText(txt)
+			s:SizeToContents()
+		end
 	end
 
 	return pnl
@@ -296,10 +392,12 @@ end
 function FRETTA:FindTop()
 	self.Rows = 0
 
-	local deliveries = player_GetAll()
-	local steals = player_GetAll()
-	local kills = player_GetAll()
-	local deaths = player_GetAll()
+	local plys = player_GetAll()
+
+	local deliveries = table.Copy(plys)
+	local steals = table.Copy(plys)
+	local kills = table.Copy(plys)
+	local deaths = table.Copy(plys)
 
 	--table.sort( self.Top5Alive, function(a, b) return a:Frags() > b:Frags() end )
 
@@ -445,7 +543,7 @@ function FRETTA:CreateWinScreen(winnercount, winners, duration)
 	mostKills:SetFont( "SplashMed" )
 
 	mostKills:SizeToContents()
-	mostKills:SetPos( x / 1.5 - lblKills:GetWide() / 2, y / 1.55 - mostKills:GetTall() + lblKills:GetTall())
+	mostKills:SetPos( x / 1.5 - mostKills:GetWide() / 2, y / 1.55 - mostKills:GetTall() + lblKills:GetTall())
 	mostKills:SetColor( Color( 255, 255, 255, 255 ) )
 	mostKills:SetVisible( false )
 
