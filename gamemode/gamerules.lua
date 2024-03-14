@@ -41,8 +41,7 @@ function GM:DoRoundTimer()
 		SetGlobalInt("iRoundNumber", roundCount)
 
 		if hook.Call("910_RoundEnd", self, roundCount) then
-			self.bEndGame = true
-			self.fIntermissionEnd = CurTime() + 300
+			self:StartIntermission()
 
 			return
 		end

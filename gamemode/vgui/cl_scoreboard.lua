@@ -356,5 +356,7 @@ function GM:ScoreboardShow()
 end
 
 function GM:ScoreboardHide()
+	if !IsValid(scoreboardPnl) then return end
+
 	scoreboardPnl:Remove()
 end

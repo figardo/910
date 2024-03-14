@@ -184,12 +184,14 @@ function GM:Think()
 				if team.GetScore(i) < FragLimit then continue end
 
 				self:StartIntermission()
+				break
 			end
 		else
 			for _, ply in player.Iterator() do
 				if !IsValid(ply) or ply:Frags() < FragLimit then continue end
 
 				self:StartIntermission()
+				break
 			end
 		end
 	end

@@ -51,10 +51,9 @@ hook.Add("910_RoundEnd", "910_Mapvote", function(roundCount) -- Argument 1 is th
 	if MapVote and roundCount > maxrounds then
 		timer.Simple(5, function()
 			MapVote.Start(nil, nil, nil, {"910_"}) -- look for maps with 910_ prefixes
+			GAMEMODE.fIntermissionEnd = CurTime() + 300
 		end)
 
 		return true -- prevents round from restarting
 	end
-
-	return false -- allows round to restart
 end)

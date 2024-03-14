@@ -371,9 +371,11 @@ end
 net.Receive("910_RPSound", RPSound)
 
 local function ShowScoreboard()
-	if enable then
-		GAMEMODE:ScoreboardShow()
-	end
+	GAMEMODE:ScoreboardHide()
+	GAMEMODE:ScoreboardShow()
+
+	GAMEMODE.ScoreboardShow = nil
+	GAMEMODE.ScoreboardHide = nil
 end
 net.Receive("910_ShowScoreboard", ShowScoreboard)
 
