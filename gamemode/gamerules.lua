@@ -329,8 +329,9 @@ function GM:SendInitial(ply)
 
 	local version = self.GamemodeVersion
 
-	if self.MAP_SETTINGS and self.MAP_SETTINGS.HUD > -1 then
-		version = self.MAP_SETTINGS.HUD -- lie to the client because it only uses this for huds
+	local mapSettings = self:GetMapSettings()
+	if mapSettings and mapSettings.HUD > -1 then
+		version = mapSettings.HUD -- lie to the client because it only uses this for huds
 	end
 
 	net.Start("910_SendMode")

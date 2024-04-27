@@ -221,6 +221,12 @@ function GM:PropBreak(ply, prop)
 	table.RemoveByValue(self.PropCache, prop:EntIndex())
 end
 
+local pistolMaps = {
+	["testmap_original"] = true,
+	["2bunkers_b"] = true,
+	["city_arena_beta3"] = true
+}
+
 -- Give the players the default weapons --
 function GM:PlayerLoadout(ply)
 	if ply:Team() == TEAM_SPECTATOR then return end
@@ -229,7 +235,10 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weapon_crowbar")
 	end
 
-	-- ply:Give("weapon_pistol")
+	if self.PISTOL_ENABLED or pistolMaps[game.GetMap()] then
+		ply:Give("weapon_pistol")
+	end
+
 	ply:Give("weapon_physcannon")
 
 	ply:SelectWeapon("weapon_physcannon")
@@ -277,12 +286,7 @@ local respawningProps = CreateConVar("910_proprespawn", "0", FCVAR_NOTIFY, "Repl
 local removeAllWeapons = CreateConVar("910_removeweapons", "0", FCVAR_ARCHIVE, "Removes all HL2DM weapons from maps that would normally spawn them.")
 
 function GM:InitPostEntity()
-	local mapSettings = ents.FindByClass("nten_mapsettings")
-	if #mapSettings > 0 then
-		self.MAP_SETTINGS = mapSettings[1]
-	end
-
-	self:ResetValues()
+	self:CreateConVars()
 
 	SetGlobalFloat("fRoundEnd", CurTime() + self.ROUND_LENGTH)
 

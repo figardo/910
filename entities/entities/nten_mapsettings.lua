@@ -16,6 +16,7 @@ ENT.WeaponRespawnLength = -1
 
 ENT.FrettaMovement = -1
 ENT.EnableCrowbar = -1
+ENT.EnablePistol = -1
 ENT.LargePropScore = -1
 ENT.CoolFX = -1
 

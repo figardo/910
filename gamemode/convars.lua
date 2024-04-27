@@ -1,30 +1,32 @@
+-- types:
+-- 1: int
+-- 2: float
+-- 3: bool
+
+if !NTEN_ConVars then
+	NTEN_ConVars = {
+		{name = "910_roundtime_seconds", default = "300", flags = FCVAR_NOTIFY, desc = "The length of each round.", type = 2, gmval = "ROUND_LENGTH", mapsettings = "RoundLength", min = 0},
+		{name = "910_postround_time", default = "7", flags = FCVAR_NOTIFY, desc = "The duration that the win screen is shown after the round ends.", type = 2, gmval = "POSTROUND_TIME", mapsettings = "PostRoundTime", min = 0},
+		{name = "910_suddendeath_time", default = "-1", flags = FCVAR_NOTIFY, desc = "If greater than -1, override sudden death timer (in seconds).", type = 2, gmval = "SUDDEN_DEATH_TIME", mapsettings = "WinLength", min = -1},
+		{name = "910_proprespawn_time", default = "2", flags = FCVAR_NOTIFY, desc = "If 910_proprespawn is enabled, set how long each prop spawn takes.", type = 2, gmval = "PROP_RESPAWN_TIME", mapsettings = "PropRespawnLength", min = 0},
+		{name = "910_weprespawn", default = "20", flags = FCVAR_NOTIFY, desc = "The time until a weapon respawns after being picked up.", type = 1, gmval = "WEAPON_RESPAWN_TIME", mapsettings = "WeaponRespawnLength", min = 0},
+		{name = "910_teamplay", default = "1", flags = FCVAR_NOTIFY, desc = "Used alongside mp_fraglimit. Disable to have FFA deathmatch.", type = 3, gmval = "TEAMPLAY", mapsettings = "Teamplay"},
+		{name = "910_largeprop", default = "0", flags = FCVAR_NOTIFY, desc = "If enabled, give double points for collecting large props.", type = 3, gmval = "LARGE_PROP_SCORE", mapsettings = "LargePropScore"},
+		{name = "910_coolfx", default = "1", flags = FCVAR_NOTIFY, desc = "Enables cool particle effects when scoring points.", type = 3, gmval = "COOL_FX", mapsettings = "CoolFX"},
+		{name = "910_fastmovement", default = "0", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Increase movement speed to 400u/s and disable sprinting.", type = 3, gmval = "FAST_MODE", mapsettings = "FrettaMovement"},
+		{name = "910_enablecrowbar", default = "1", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Give the crowbar to players when they spawn (excludes 910_scramble).", type = 1, gmval = "CROWBAR_ENABLED", mapsettings = "EnableCrowbar"},
+		{name = "910_enablepistol", default = "0", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Give the pistol to players when they spawn.", type = 1, gmval = "PISTOL_ENABLED", mapsettings = "EnablePistol"}
+	}
+end
+
 local CreateConVar = CreateConVar
 local cvars_AddChangeCallback = cvars.AddChangeCallback
 
 local override_mapsettings = CreateConVar("910_override_mapsettings", "0", FCVAR_ARCHIVE, "Ignore map defined settings in favour of server settings.")
 
-local roundtimer = CreateConVar("910_roundtime_seconds", "300", FCVAR_NOTIFY, "The length of each round.", 0)
-local postRoundTime = CreateConVar("910_postround_time", "7", FCVAR_NOTIFY, "The duration that the win screen is shown after the round ends.", 0)
-
-local suddenDeathTime = CreateConVar("910_suddendeath_time", "-1", FCVAR_NOTIFY, "If greater than -1, override sudden death timer (in seconds).", -1)
-
-local respawnTime = CreateConVar("910_proprespawn_time", "2", FCVAR_NOTIFY, "If 910_proprespawn is enabled, set how long each prop spawn takes.", 0)
-
-local wepRespawnTime = CreateConVar("910_weprespawn", "20", FCVAR_NOTIFY, "The time until a weapon respawns after being picked up.", 0)
-
-local teamplay = CreateConVar("910_teamplay", "1", FCVAR_NOTIFY, "Used alongside mp_fraglimit. Disable to have FFA deathmatch.", 0, 1)
-
-local largePropScore = CreateConVar("910_largeprop", "0", FCVAR_NOTIFY, "If enabled, give double points for collecting large props.", 0, 1)
-
-local coolFX = CreateConVar("910_coolfx", "1", FCVAR_NOTIFY, "Enables cool particle effects when scoring points.", 0, 1)
-
-local fastMode = CreateConVar("910_fastmovement", "0", FCVAR_ARCHIVE, "Increase movement speed to 400u/s and disable sprinting.", 0, 1)
-
-local disableCrowbar = CreateConVar("910_disablecrowbar", "0", FCVAR_ARCHIVE, "Don't give the crowbar to players when they spawn.", 0, 1)
-
-function GM:ProcessConVarNum(setting, convar)
-	if !override_mapsettings:GetBool() and self.MAP_SETTINGS and self.MAP_SETTINGS[setting] > -1 then
-		return self.MAP_SETTINGS[setting]
+function GM:ProcessConVarNum(mapSettings, setting, convar)
+	if !override_mapsettings:GetBool() and mapSettings and mapSettings[setting] > -1 then
+		return mapSettings[setting]
 	end
 
 	if setting == "WinLength" and self:IsSourcemod() then
@@ -34,49 +36,57 @@ function GM:ProcessConVarNum(setting, convar)
 	return convar
 end
 
-function GM:ProcessConVarBool(setting, convar, invertDefault)
-	if !override_mapsettings:GetBool() and self.MAP_SETTINGS and self.MAP_SETTINGS[setting] > -1 then
-		return self.MAP_SETTINGS[setting] == 1
+function GM:ProcessConVarBool(mapSettings, setting, convar)
+	if !override_mapsettings:GetBool() and mapSettings and mapSettings[setting] > -1 then
+		return mapSettings[setting] == 1
 	end
 
-	local default = convar:GetBool()
-	if invertDefault then
-		return !default
-	else
-		return default
+	return convar
+end
+
+function GM:GetMapSettings()
+	if !self.MAP_SETTINGS then
+		self.MAP_SETTINGS = ents.FindByClass("nten_mapsettings")[1]
+	end
+
+	return self.MAP_SETTINGS
+end
+
+function GM:CreateConVars()
+	local mapSettings = self:GetMapSettings()
+
+	local convars = NTEN_ConVars
+
+	for i = 1, #convars do
+		local data = convars[i]
+
+		local min = data.min
+		local max = data.max
+
+		if data.type == 3 then
+			min = 0
+			max = 1
+		end
+
+		local convar = CreateConVar(data.name, data.default, data.flags, data.desc, min, max)
+		convars[i].convar = convar
+
+		self:ResetConVar(mapSettings, data, convar)
+
+		cvars_AddChangeCallback(data.name, function() self:ResetConVar(mapSettings, data, convar) end)
 	end
 end
 
-function GM:ResetValues()
-	self.ROUND_LENGTH = self:ProcessConVarNum("RoundLength", roundtimer:GetInt()) -- in seconds
-	self.POSTROUND_TIME = self:ProcessConVarNum("PostRoundTime", postRoundTime:GetInt())
+function GM:ResetConVar(mapSettings, data, convar)
+	local cvtype = data.type
 
-	self.SUDDEN_DEATH_TIME = self:ProcessConVarNum("WinLength", suddenDeathTime:GetInt())
+	convar = convar or data.convar
 
-	self.PROP_RESPAWN_TIME = self:ProcessConVarNum("PropRespawnLength", respawnTime:GetInt())
-
-	self.WEAPON_RESPAWN_TIME = self:ProcessConVarNum("WeaponRespawnLength", wepRespawnTime:GetFloat())
-
-	self.TEAMPLAY = self:ProcessConVarBool("Teamplay", teamplay)
-
-	self.LARGE_PROP_SCORE = self:ProcessConVarBool("LargePropScore", largePropScore)
-
-	self.COOL_FX = self:ProcessConVarBool("CoolFX", coolFX)
-
-	self.FAST_MODE = self:ProcessConVarBool("FrettaMovement", fastMode)
-
-	self.CROWBAR_ENABLED = self:ProcessConVarBool("EnableCrowbar", disableCrowbar, true)
+	if cvtype == 1 then
+		self[data.gmval] = self:ProcessConVarNum(mapSettings, data.mapsettings, convar:GetInt())
+	elseif cvtype == 2 then
+		self[data.gmval] = self:ProcessConVarNum(mapSettings, data.mapsettings, convar:GetFloat())
+	elseif cvtype == 3 then
+		self[data.gmval] = self:ProcessConVarBool(mapSettings, data.mapsettings, convar:GetBool())
+	end
 end
-cvars_AddChangeCallback("910_override_mapsettings", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_roundtime_seconds", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_suddendeath", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_suddendeath_time", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_proprespawn", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_proprespawn_time", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_weprespawn", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_postround_time", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_teamplay", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_largeprop", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_coolfx", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_disablecrowbar", function() GAMEMODE:ResetValues() end)
-cvars_AddChangeCallback("910_fastmovement", function() GAMEMODE:ResetValues() end)
