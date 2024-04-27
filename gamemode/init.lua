@@ -380,7 +380,8 @@ function GM:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		return
 	end
 
-	if dmginfo:GetDamageType() == DMG_CLUB or (self.BUFF_DAMAGE and bit.bor(DMG_BULLET, DMG_BUCKSHOT)) then
+	local dmgType = dmginfo:GetDamageType()
+	if dmgType == DMG_CLUB or (self.BUFF_DAMAGE and (bit.band(dmgType, DMG_BULLET) == DMG_BULLET or bit.band(dmgType, DMG_BUCKSHOT) == DMG_BUCKSHOT)) then
 		dmginfo:ScaleDamage(2.5)
 	end
 end
