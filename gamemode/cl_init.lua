@@ -105,7 +105,7 @@ local unsupported = {
 	-- ["hr"] = "Hrvatski jezik nije podržan. Doprinesite ovdje:",
 	-- ["hu"] = "A magyar nyelv nem támogatott. Hozzászólás itt:",
 	["it"] = "La lingua italiana non è supportata. Contribuisci qui:",
-	["ja"] = "日本語は非対応です。 ここに貢献してください:",
+	-- ["ja"] = "日本語は非対応です。 ここに貢献してください:",
 	["ko"] = "한국어는 지원하지 않습니다. 여기에 기여하세요:",
 	-- ["lt"] = "lietuvių kalba nepalaikoma. Prisidėkite čia:",
 	["nl"] = "Nederlandse taal niet ondersteund. Draag hier bij:",
@@ -199,7 +199,9 @@ local capitalLangs = { -- anything that isn't latin, cyrillic, greek, or armenia
 	["vi"] = true -- Vietnamese
 }
 
--- do NOT call this every frame
+---do NOT call this every frame
+---@param str string
+---@return string
 function utf8upper(str)
 	local curLang = GetConVar("gmod_language"):GetString():lower()
 	if standardLangs[curLang] then return str:upper() end
