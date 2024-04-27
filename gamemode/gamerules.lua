@@ -50,12 +50,10 @@ function GM:DoRoundTimer()
 	end)
 end
 
+---Set sudden death mode
+---@param enable boolean
 function GM:SetSuddenDeath(enable)
-	self.SuddenDeathMode = enable
-
-	net.Start("910_SuddenDeath")
-		net.WriteBool(enable)
-	net.Broadcast()
+	SetGlobal2Bool("910_SuddenDeath", enable)
 end
 
 --  The current map has ended, show the scoreboard ----------------------------
@@ -195,6 +193,8 @@ function GM:RespawnStoredProps()
 	end
 end
 
+---Finds team with lowest playercount.
+---@return integer
 function GM:GetBestTeam()
 	local teams = self.ItemCount
 	local highest = 0
@@ -219,6 +219,8 @@ function GM:GetBestTeam()
 	return #lowest > 0 and lowest[1] or 1
 end
 
+---Returns true if teams are unbalanced.
+---@return boolean
 function GM:TeamsAreUnbalanced()
 	local teams = self.ItemCount
 	local highest = 0
@@ -242,6 +244,8 @@ function GM:TeamsAreUnbalanced()
 	return false
 end
 
+---Shuffles teams.
+---@param showmsg boolean
 function GM:ShuffleTeams(showmsg)
 	local plys = player.GetAll()
 	table.Shuffle(plys)

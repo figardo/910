@@ -267,7 +267,7 @@ function SOURCEMOD:CreateTimerPanel(parent, x, y)
 
 		TimerText = string_FormattedTime(newTime, "%01i:%02i")
 
-		local suddenDeath = GAMEMODE.SuddenDeathMode
+		local suddenDeath = GAMEMODE:GetSuddenDeath()
 		if (suddenDeath or newTime <= 10) and newTime != 0 then
 			surface_PlaySound(tenSecondWarning)
 

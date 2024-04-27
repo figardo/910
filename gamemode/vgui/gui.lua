@@ -72,13 +72,7 @@ cvars.AddChangeCallback("910_hud", function(_, old, new) GAMEMODE:ResetHUD(old, 
 cvars.AddChangeCallback("gmod_language", function() GAMEMODE:ResetHUD("0", "0") end)
 hook.Add("OnScreenSizeChanged", "910_ResolutionReset", function() GAMEMODE:ResetHUD("0", "0") end)
 
-local function SetSuddenDeath()
-	GAMEMODE.SuddenDeathMode = net.ReadBool()
-end
-net.Receive("910_SuddenDeath", SetSuddenDeath)
-
 -- called every second
-
 function GM:TargetID(x, y)
 	local tr = LocalPlayer():GetEyeTrace()
 	local ent = tr.Entity

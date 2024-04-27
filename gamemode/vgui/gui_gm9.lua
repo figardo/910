@@ -261,7 +261,7 @@ function GM9:CreateTimerPanel(parent, x, y)
 		TimerText = newTime == 0 and newTime or newTime - 1
 		TimerText = string_FormattedTime(TimerText, "%01i:%02i")
 
-		local suddenDeath = GAMEMODE.SuddenDeathMode
+		local suddenDeath = GAMEMODE:GetSuddenDeath()
 		if (suddenDeath or newTime <= 10) and newTime != 0 then
 			surface_PlaySound(tenSecondWarning)
 

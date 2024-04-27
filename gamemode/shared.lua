@@ -18,6 +18,11 @@ function GM:ShouldCollide(ent1, ent2)
 	return true
 end
 
+---Ease Color
+---@param delta number
+---@param from Color
+---@param to Color
+---@return Color
 function LerpColor(delta, from, to)
 	local r = Lerp(delta, from.r, to.r)
 	local g = Lerp(delta, from.g, to.g)
@@ -27,6 +32,8 @@ function LerpColor(delta, from, to)
 	return Color(r, g, b, a)
 end
 
+---Print 
+---@param ... string
 function DevPrint(...)
 	if !GetConVar("developer"):GetBool() then return end
 
@@ -41,18 +48,32 @@ function DevPrint(...)
 	Msg("\n")
 end
 
+---Get if sudden death is enabled
+---@return boolean
+function GM:GetSuddenDeath()
+	return GetGlobal2Bool("910_SuddenDeath", false)
+end
+
+---Return true if map contains GMod 9 entities.
+---@return boolean
 function GM:IsGM9()
 	return self.GamemodeVersion == 1
 end
 
+---Return true if map contains Sourcemod entities.
+---@return boolean
 function GM:IsSourcemod()
 	return self.GamemodeVersion == 2
 end
 
+---Return true if map contains Fretta entities.
+---@return boolean
 function GM:IsFretta()
 	return self.GamemodeVersion == 3
 end
 
+---Return true if map contains GMod 10 entities.
+---@return boolean
 function GM:IsGM10() -- probably never but never say never
 	return self.GamemodeVersion == 4
 end

@@ -59,7 +59,6 @@ util.AddNetworkString("910_UpdateScores")
 util.AddNetworkString("910_Winner")
 util.AddNetworkString("910_SendTeams")
 util.AddNetworkString("910_SetScore")
-util.AddNetworkString("910_SuddenDeath")
 util.AddNetworkString("910_SendMode")
 util.AddNetworkString("910_Ready")
 
@@ -71,6 +70,7 @@ function GM:Initialize()
 	self.fIntermissionEnd = 0
 
 	self.GamemodeVersion = 0
+	self.CurrentTeamID = 0
 
 	self.ItemCount = {}
 	self.LargeItemCount = {}
@@ -110,7 +110,7 @@ function GM:DoSuddenDeath()
 
 			tempcheck = true
 
-			if self.SuddenDeathMode or timeLeft <= suddenDeathInt then continue end
+			if self:GetSuddenDeath() or timeLeft <= suddenDeathInt then continue end
 
 			local sdTime = CurTime() + suddenDeathInt
 			cachedTime = roundEnd
@@ -121,7 +121,7 @@ function GM:DoSuddenDeath()
 			break
 		end
 
-		if self.SuddenDeathMode and !tempcheck then
+		if self:GetSuddenDeath() and !tempcheck then
 			SetGlobalFloat("fRoundEnd", cachedTime)
 
 			self:SetSuddenDeath(false)
@@ -177,7 +177,7 @@ function GM:Think()
 	end
 
 	if FragLimit > 0 then -- We have a fraglimit!
-		if teamplay:GetBool() then
+		if GetConVar("mp_teamplay"):GetBool() then
 			local NumTeams = #team.GetAllTeams()
 
 			for i = 1, NumTeams do
