@@ -15,10 +15,12 @@ ENT.PropRespawnLength = -1
 ENT.WeaponRespawnLength = -1
 
 ENT.FrettaMovement = -1
-ENT.EnableCrowbar = -1
-ENT.EnablePistol = -1
 ENT.LargePropScore = -1
 ENT.CoolFX = -1
+
+ENT.EnableCrowbar = -1
+ENT.EnablePistol = -1
+ENT.BuffDamage = -1
 
 ENT.Teamplay = -1
 

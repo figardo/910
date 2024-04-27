@@ -14,8 +14,9 @@ if !NTEN_ConVars then
 		{name = "910_largeprop", default = "0", flags = FCVAR_NOTIFY, desc = "If enabled, give double points for collecting large props.", type = 3, gmval = "LARGE_PROP_SCORE", mapsettings = "LargePropScore"},
 		{name = "910_coolfx", default = "1", flags = FCVAR_NOTIFY, desc = "Enables cool particle effects when scoring points.", type = 3, gmval = "COOL_FX", mapsettings = "CoolFX"},
 		{name = "910_fastmovement", default = "0", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Increase movement speed to 400u/s and disable sprinting.", type = 3, gmval = "FAST_MODE", mapsettings = "FrettaMovement"},
-		{name = "910_enablecrowbar", default = "1", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Give the crowbar to players when they spawn (excludes 910_scramble).", type = 1, gmval = "CROWBAR_ENABLED", mapsettings = "EnableCrowbar"},
-		{name = "910_enablepistol", default = "0", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Give the pistol to players when they spawn.", type = 1, gmval = "PISTOL_ENABLED", mapsettings = "EnablePistol"}
+		{name = "910_enablecrowbar", default = "1", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Give the crowbar to players when they spawn (excludes 910_scramble).", type = 3, gmval = "CROWBAR_ENABLED", mapsettings = "EnableCrowbar"},
+		{name = "910_enablepistol", default = "0", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Give the pistol to players when they spawn.", type = 3, gmval = "PISTOL_ENABLED", mapsettings = "EnablePistol"},
+		{name = "910_buffdamage", default = "1", flags = FCVAR_NOTIFY + FCVAR_ARCHIVE, desc = "Use HL2DM damage values with hitscan guns.", type = 3, gmval = "BUFF_DAMAGE", mapsettings = "BuffDamage"}
 	}
 end
 
