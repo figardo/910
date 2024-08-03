@@ -95,13 +95,11 @@ local function WPaint(pnl, startTime, originalCol)
 	local delta = CurTime() - startTime
 
 	if delta <= 0.1 then
-		local lerp = LerpColor(delta * 10, originalCol, color_white)
-
-		pnl:SetColor(lerp)
+		pnl:SetColor(originalCol:Lerp(color_white, delta * 10))
 	elseif delta <= 0.7 then
-		local lerp = LerpColor((delta - 0.1) * (5 / 3), color_white, originalCol)
+		local lerpDelta = (delta - 0.1) * (5 / 3)
 
-		pnl:SetColor(lerp)
+		pnl:SetColor(color_white:Lerp(originalCol, lerpDelta))
 	else
 		pnl:SetColor(originalCol)
 	end
@@ -209,7 +207,7 @@ local function WarningPaint(pnl, startTime)
 	elseif delta <= 0.3 then
 		colour = white
 	elseif delta <= 0.8 then
-		colour = LerpColor((delta - 0.3) * 2, red, white)
+		colour = red:Lerp(white, (delta - 0.3) * 2)
 	end
 
 	pnl:SetColor(colour)
@@ -222,7 +220,7 @@ local function SuddenDeathPaint(pnl, startTime)
 	local colour = green
 
 	if delta <= 0.5 then
-		colour = LerpColor(delta * 2, white, green)
+		colour = white:Lerp(green, delta * 2)
 	end
 
 	pnl:SetColor(colour)

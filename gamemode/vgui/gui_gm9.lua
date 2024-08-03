@@ -35,7 +35,7 @@ local scoreMaterial = Material("gmod/gm_910/scores_new")
 local function UpdatePaint(pnl, startTime, originalColour)
 	local delta = CurTime() - startTime
 
-	pnl:SetColor(LerpColor(delta, color_white, originalColour))
+	pnl:SetColor(color_white:Lerp(originalColour, delta))
 end
 
 function GM9:CreateScorePanel(parent, x, y)
@@ -198,7 +198,7 @@ local function SuddenDeathPaint(pnl, startTime)
 	local colour = green
 
 	if delta <= 0.5 then
-		colour = LerpColor(delta * 2, white, green)
+		colour = white:Lerp(green, delta * 2)
 	end
 
 	pnl:SetColor(colour)
@@ -211,7 +211,7 @@ local function WarningPaint(pnl, startTime)
 	local colour = white
 
 	if delta <= 1 then
-		colour = LerpColor(delta, red, white)
+		colour = red:Lerp(white, delta)
 	end
 
 	pnl:SetColor(colour)

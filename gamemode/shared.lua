@@ -18,19 +18,6 @@ function GM:ShouldCollide(ent1, ent2)
 	return true
 end
 
----Ease Color
----@param delta number
----@param from Color
----@param to Color
----@return Color
-function LerpColor(delta, from, to)
-	local r = Lerp(delta, from.r, to.r)
-	local g = Lerp(delta, from.g, to.g)
-	local b = Lerp(delta, from.b, to.b)
-	local a = Lerp(delta, from.a, to.a)
-
-	return Color(r, g, b, a)
-end
 
 ---Print 
 ---@param ... string

@@ -4,7 +4,6 @@ local team_GetColor = team.GetColor
 local Color = Color
 local IsValid = IsValid
 local LocalPlayer = LocalPlayer
-local LerpColor = LerpColor
 local draw_RoundedBox = draw.RoundedBox
 local derma_DefineControl = derma.DefineControl
 local pairs = pairs
@@ -62,7 +61,7 @@ function PANEL:Paint( w, h )
 	local col = self.Color
 
 	if LocalPlayer() != self.ply then
-		col = LerpColor(self.ply:VoiceVolume(), self.QuietColor, self.Color) -- but if it WAS used, this is the coolest way you could use it
+		col = self.QuietColor:Lerp(self.Color, self.ply:VoiceVolume()) -- but if it WAS used, this is the coolest way you could use it
 	end
 
 	draw_RoundedBox( 4, 0, 0, w, h, col )
