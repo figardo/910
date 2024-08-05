@@ -61,6 +61,8 @@ util.AddNetworkString("910_SendTeams")
 util.AddNetworkString("910_SetScore")
 util.AddNetworkString("910_SendMode")
 util.AddNetworkString("910_Ready")
+util.AddNetworkString("910_ShowTeam")
+util.AddNetworkString("910_HelpScreen")
 
 --  Called right before the new map starts ------------------------------------
 function GM:Initialize()
@@ -442,6 +444,8 @@ function GM:PlayerInitialSpawn(ply)
 		-- If they're a spectator show them the team choice menu
 		if ply:Team() != TEAM_SPECTATOR then return end
 
+		ply:SetTeam(TEAM_UNASSIGNED)
+
 		timer.Simple(4.5, function()
 			if forceAutoSelect:GetBool() or self:IsSourcemod() or ply:IsBot() then
 				local tid = self:GetBestTeam()
@@ -459,7 +463,8 @@ end
 function GM:PlayerSpawn(ply)
 	self.BaseClass.PlayerSpawn(self, ply)
 
-	if ply:Team() == TEAM_SPECTATOR or !self:IsFretta() then return end
+	local tid = ply:Team()
+	if tid == TEAM_SPECTATOR or tid == TEAM_UNASSIGNED or !self:IsFretta() then return end
 
 	-- Spawn sounds
 	local snd = table.Random( GAMEMODE.SpawnSounds )
@@ -469,7 +474,8 @@ end
 function GM:DoPlayerDeath(ply, attacker, dmg)
 	self.BaseClass.DoPlayerDeath(self, ply, attacker, dmg)
 
-	if ply:Team() == TEAM_SPECTATOR or !self:IsFretta() then return end
+	local tid = ply:Team()
+	if tid == TEAM_SPECTATOR or tid == TEAM_UNASSIGNED or !self:IsFretta() then return end
 
 	-- When a player dies, fvox makes a witty comment
 	local snd = table.Random( GAMEMODE.DeathSounds )
@@ -488,7 +494,7 @@ local lastSpawn = {}
 function GM:PlayerSelectTeamSpawn(tid, ply)
 	local spawnlist = {}
 
-	if tid == TEAM_SPECTATOR then return end
+	if tid == TEAM_SPECTATOR or tid == TEAM_UNASSIGNED then return end
 
 	if self:IsSourcemod() then
 		local ent = tid == 1 and "info_player_blueteam" or "info_player_redteam"
@@ -525,12 +531,19 @@ function GM:PlayerSelectTeamSpawn(tid, ply)
 	return spawnlist[lastSpawn[tid]]
 end
 
+local disableTeamChange = GetConVar("910_disableteamchange")
 function GM:ShowTeam(ply)
-	ply:ConCommand("910_showteam")
+	net.Start("910_ShowTeam")
+	net.Send(ply)
+
+	if disableTeamChange:GetBool() then
+		self:ToggleSpectator(ply)
+	end
 end
 
 function GM:ShowHelp(ply)
-	ply:ConCommand("910_helpscreen")
+	net.Start("910_HelpScreen")
+	net.Send(ply)
 end
 
 function GM:GravGunOnPickedUp(ply, ent)
@@ -538,7 +551,8 @@ function GM:GravGunOnPickedUp(ply, ent)
 end
 
 function GM:PlayerSwitchFlashlight(ply)
-	return ply:Team() != TEAM_SPECTATOR
+	local t = ply:Team()
+	return t != TEAM_SPECTATOR and t != TEAM_UNASSIGNED
 end
 
 print("--------------------------------------------------------")

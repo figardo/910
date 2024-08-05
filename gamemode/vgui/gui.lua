@@ -164,9 +164,7 @@ end
 local mTeam1 = Material("gmod/gm_910/team1")
 local mTeam2 = Material("gmod/gm_910/team2")
 local function ChooseTeam(num)
-	hook.Remove("HUDPaintBackground", "910_TeamScreen")
-
-	num = num > #team.GetAllTeams() and team.BestAutoJoinTeam() or num
+	num = (num != 6 and num > #team.GetAllTeams()) and team.BestAutoJoinTeam() or num
 
 	local x = ScrW()
 	local y = ScrH()
@@ -230,10 +228,12 @@ local function ChooseTeam(num)
 
 	local toSend = num - 1
 
-	if num <= GAMEMODE.CurrentTeamID then
-		if ply:Team() == num then return true end
-	else
-		toSend = 6
+	if num != 6 then
+		if num <= GAMEMODE.CurrentTeamID then
+			if ply:Team() == num then return true end
+		else
+			toSend = 6
+		end
 	end
 
 	-- anything else is auto choose team
@@ -285,13 +285,83 @@ local function onShowHelp()
 	help:AlphaTo(0, 2, 5, function(_, pnl) pnl:Remove() end)
 end
 concommand.Add("910_helpscreen", onShowHelp)
+net.Receive("910_HelpScreen", onShowHelp)
 
 -- temporary until i can make some appropriately coloured pantsless dudes
 local sTeam3 = "Press 3 to join RED"
 local sTeam4 = "Press 4 to join GREEN"
 
 local delay = 1
+local function DrawShowTeam(x, y, starttime)
+	local delta1 = math.Clamp(CurTime() - starttime, 0, 1) * 2
+	local alpha1 = Lerp(delta1, 0, 15)
+
+	local delta2 = math.Clamp(CurTime() - starttime, 0, 1) * 2
+	local alpha2 = Lerp(delta2, 0, 255)
+
+	surface.SetDrawColor(255, 255, 255, alpha1)
+	surface.DrawRect(0, 0, x, y)
+
+	surface.SetDrawColor(255, 255, 255, alpha2)
+	surface.SetMaterial(mTeam1)
+	surface.DrawTexturedRect(x * 0.15, y * 0.25, x * 0.35, y * 0.42)
+
+	surface.SetMaterial(mTeam2)
+	surface.DrawTexturedRect(x * 0.5, y * 0.25, x * 0.35, y * 0.42)
+
+	surface.SetFont("LegacyDefault")
+
+	local numTeams = #team.GetAllTeams()
+	if numTeams > 2 then
+		surface.SetTextColor(255, 0, 0, 255)
+		local w = surface.GetTextSize(sTeam3)
+		surface.SetTextPos((x * 0.5) - (w / 2), y * 0.75)
+		surface.DrawText(sTeam3)
+	end
+
+	if numTeams > 3 then
+		surface.SetTextColor(0, 255, 0, 255)
+		local w = surface.GetTextSize(sTeam4)
+		surface.SetTextPos((x * 0.5) - (w / 2), y * 0.775)
+		surface.DrawText(sTeam4)
+	end
+
+	if CurTime() > starttime + delay then
+		local delta3 = math.Clamp(CurTime() - starttime - delay, 0, 1) * 2
+		local alpha3 = Lerp(delta3, 0, 255)
+
+		surface.SetTextColor(0, 0, 0, alpha3)
+		local w, h = surface.GetTextSize("#NineTenths.AutoSelect")
+		surface.SetTextPos((x * 0.5) - (w / 2), y * 0.8)
+		surface.DrawText("#NineTenths.AutoSelect")
+
+		w = surface.GetTextSize("#NineTenths.Spectate")
+		surface.SetTextPos((x * 0.5) - (w / 2), (y * 0.8) + h)
+		surface.DrawText("#NineTenths.Spectate")
+	end
+end
+
+local disableTeamChange = CreateConVar("910_disableteamchange", "0", FCVAR_REPLICATED)
+local recentlyPressed = false
 function GM:ShowTeam()
+	if disableTeamChange:GetBool() then
+		if recentlyPressed and recentlyPressed <= CurTime() + 5 then
+			recentlyPressed = false
+
+			return
+		end
+
+		if LocalPlayer():Team() == TEAM_SPECTATOR then
+			chat.AddText("Press F2 again to join a team.")
+		else
+			chat.AddText("Press F2 again to join spectator.")
+		end
+
+		recentlyPressed = CurTime()
+
+		return
+	end
+
 	if hook.Run("910_TeamScreen") then return end
 
 	hook.Remove("HUDPaintBackground", "910_TeamScreen")
@@ -301,54 +371,12 @@ function GM:ShowTeam()
 	local y = ScrH()
 
 	local starttime = CurTime()
-	hook.Add("HUDPaintBackground", "910_TeamScreen", function()
-		local delta1 = math.Clamp(CurTime() - starttime, 0, 1) * 2
-		local alpha1 = Lerp(delta1, 0, 15)
-
-		local delta2 = math.Clamp(CurTime() - starttime, 0, 1) * 2
-		local alpha2 = Lerp(delta2, 0, 255)
-
-		surface.SetDrawColor(255, 255, 255, alpha1)
-		surface.DrawRect(0, 0, x, y)
-
-		surface.SetDrawColor(255, 255, 255, alpha2)
-		surface.SetMaterial(mTeam1)
-		surface.DrawTexturedRect(x * 0.15, y * 0.25, x * 0.35, y * 0.42)
-
-		surface.SetMaterial(mTeam2)
-		surface.DrawTexturedRect(x * 0.5, y * 0.25, x * 0.35, y * 0.42)
-
-		surface.SetFont("LegacyDefault")
-
-		if #team.GetAllTeams() > 2 then
-			surface.SetTextColor(255, 0, 0, 255)
-			local w = surface.GetTextSize(sTeam3)
-			surface.SetTextPos((x * 0.5) - (w / 2), y * 0.75)
-			surface.DrawText(sTeam3)
-		end
-
-		if #team.GetAllTeams() > 3 then
-			surface.SetTextColor(0, 255, 0, 255)
-			local w = surface.GetTextSize(sTeam4)
-			surface.SetTextPos((x * 0.5) - (w / 2), y * 0.775)
-			surface.DrawText(sTeam4)
-		end
-
-		if CurTime() > starttime + delay then
-			local delta3 = math.Clamp(CurTime() - starttime - delay, 0, 1) * 2
-			local alpha3 = Lerp(delta3, 0, 255)
-
-			surface.SetTextColor(0, 0, 0, alpha3)
-			local w = surface.GetTextSize("#NineTenths.AutoSelect")
-			surface.SetTextPos((x * 0.5) - (w / 2), y * 0.8)
-			surface.DrawText("#NineTenths.AutoSelect")
-		end
-	end)
 
 	-- I know this 99999 stuff sucks.. but so do I.
-	LocalPlayer():AddPlayerOption("ChooseTeam", 99999, ChooseTeam)
+	LocalPlayer():AddPlayerOption("ChooseTeam", 99999, ChooseTeam, function() DrawShowTeam(x, y, starttime) end)
 end
 concommand.Add("910_showteam", function() GAMEMODE:ShowTeam() end)
+net.Receive("910_ShowTeam", function() GAMEMODE:ShowTeam() end)
 
 local function RPSound()
 	local good = net.ReadBool()

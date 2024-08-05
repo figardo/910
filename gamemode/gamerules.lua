@@ -444,9 +444,17 @@ function onEntityUntouch(teamID)
 	GAMEMODE:EntityTouch(a, teamID, false)
 end
 
+local disableTeamChange = CreateConVar("910_disableteamchange", "0", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Prevent players from manually switching teams.", 0, 1)
+
 function GM:ChangeTeam(ply, teamid)
+	if teamid == 6 then
+		self:ToggleSpectator(ply, true)
+
+		return
+	end
+
 	if teamid == 7 then
-		teamid = GAMEMODE:GetBestTeam()
+		teamid = self:GetBestTeam()
 	end
 
 	ply:KillSilent()
@@ -459,7 +467,34 @@ function GM:ChangeTeam(ply, teamid)
 	timer.Simple(2, function() ply:Spawn() end)
 end
 net.Receive("910_ChangeTeam", function(_, ply)
+	if disableTeamChange:GetBool() then return end
+
 	local tid = net.ReadUInt(3) + 1
 
 	GAMEMODE:ChangeTeam(ply, tid)
 end)
+
+function GM:ToggleSpectator(ply, instant)
+	local plytbl = ply:GetTable()
+
+	if !instant and (!plytbl.PressedSpecButton or plytbl.PressedSpecButton > CurTime() + 5) then
+		plytbl.PressedSpecButton = CurTime()
+
+		return
+	end
+
+	if ply:Team() == TEAM_SPECTATOR then
+		local tid = self:GetBestTeam()
+		ply:KillSilent()
+		ply:SetTeam(tid)
+		ply:SetPlayerColor(team.GetColor(tid):ToVector())
+		ply:Spawn()
+	else
+		ply:Spectate(OBS_MODE_ROAMING)
+		ply:SetTeam(TEAM_SPECTATOR)
+		ply:KillSilent()
+		ply:Spawn()
+	end
+
+	plytbl.PressedSpecButton = false
+end
