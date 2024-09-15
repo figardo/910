@@ -477,8 +477,11 @@ end)
 function GM:ToggleSpectator(ply, instant)
 	local plytbl = ply:GetTable()
 
-	if !instant and (!plytbl.PressedSpecButton or plytbl.PressedSpecButton > CurTime() + 5) then
+	if !instant and (!plytbl.PressedSpecButton or plytbl.PressedSpecButton + 5 < CurTime()) then
 		plytbl.PressedSpecButton = CurTime()
+
+		net.Start("910_ShowTeam")
+		net.Send(ply)
 
 		return
 	end

@@ -342,22 +342,13 @@ local function DrawShowTeam(x, y, starttime)
 end
 
 local disableTeamChange = CreateConVar("910_disableteamchange", "0", FCVAR_REPLICATED)
-local recentlyPressed = false
 function GM:ShowTeam()
 	if disableTeamChange:GetBool() then
-		if recentlyPressed and recentlyPressed <= CurTime() + 5 then
-			recentlyPressed = false
-
-			return
-		end
-
 		if LocalPlayer():Team() == TEAM_SPECTATOR then
 			chat.AddText("Press F2 again to join a team.")
 		else
 			chat.AddText("Press F2 again to join spectator.")
 		end
-
-		recentlyPressed = CurTime()
 
 		return
 	end

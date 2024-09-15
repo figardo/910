@@ -533,11 +533,11 @@ end
 
 local disableTeamChange = GetConVar("910_disableteamchange")
 function GM:ShowTeam(ply)
-	net.Start("910_ShowTeam")
-	net.Send(ply)
-
 	if disableTeamChange:GetBool() then
 		self:ToggleSpectator(ply)
+	else
+		net.Start("910_ShowTeam")
+		net.Send(ply)
 	end
 end
 
