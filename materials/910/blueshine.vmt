@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "910/blue"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .25 ]"
+}
+
+
