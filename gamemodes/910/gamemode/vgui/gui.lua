@@ -246,6 +246,13 @@ end
 
 -- These are called by the players in game using the F1 - F4 keys
 
+local function GetLargestHelp(help1, help2)
+	local x1, y = surface.GetTextSize(help1)
+	local x2 = surface.GetTextSize(help2)
+
+	return math.max(x1, x2), y
+end
+
 local help
 local function onShowHelp()
 	if hook.Run("910_HelpScreen") then return end
@@ -262,7 +269,7 @@ local function onShowHelp()
 	help = vgui.Create("DPanel")
 
 	surface.SetFont("LegacyDefault")
-	local x, y = surface.GetTextSize(help1)
+	local x, y = GetLargestHelp(help1, help2)
 	help:SetSize(x, y * 5)
 	help:SetPos((w / 2) - (x / 2), h * 0.3)
 
