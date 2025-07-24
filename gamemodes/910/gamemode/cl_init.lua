@@ -134,10 +134,6 @@ function GM:InitPostEntity()
 		ply:ChatPrint(unsupported[lang] .. " https://crowdin.com/project/nine-tenths")
 	end
 
-	if game.GetMap() == "910_scramble" and !IsMounted("ep2") then
-		chat.AddText("This map will have missing textures because you don't have Half-Life 2: Episode Two mounted.")
-	end
-
 	local w = ScrW()
 	local h = ScrH()
 
