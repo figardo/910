@@ -88,7 +88,7 @@ end
 
 local TimeLimit = GetConVar("mp_timelimit"):GetFloat() * 60 -- Minutes to seconds!
 local startTime = CurTime()
-local FragLimit = GetConVar("mp_fraglimit"):GetFloat()
+local FragLimit = CreateConVar("mp_fraglimit", "0"):GetFloat()
 
 local cachedTime
 
