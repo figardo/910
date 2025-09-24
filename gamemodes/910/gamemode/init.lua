@@ -24,6 +24,8 @@ local math = math
 local bit = bit
 local print = print
 
+DEFINE_BASECLASS("gamemode_base")
+
 ----------------------------------------------------------------------------------
 
 -- 9/10ths Lua script
@@ -463,7 +465,7 @@ function GM:PlayerInitialSpawn(ply)
 end
 
 function GM:PlayerSpawn(ply)
-	self.BaseClass.PlayerSpawn(self, ply)
+	BaseClass.PlayerSpawn(self, ply)
 
 	local tid = ply:Team()
 	if tid == TEAM_SPECTATOR or tid == TEAM_UNASSIGNED or !self:IsFretta() then return end
@@ -474,13 +476,13 @@ function GM:PlayerSpawn(ply)
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmg)
-	self.BaseClass.DoPlayerDeath(self, ply, attacker, dmg)
+	BaseClass.DoPlayerDeath(self, ply, attacker, dmg)
 
 	local tid = ply:Team()
 	if tid == TEAM_SPECTATOR or tid == TEAM_UNASSIGNED or !self:IsFretta() then return end
 
 	-- When a player dies, fvox makes a witty comment
-	local snd = table.Random( GAMEMODE.DeathSounds )
+	local snd = table.Random( self.DeathSounds )
 	ply:EmitSound( snd, 100, math.random( 80, 120 ) )
 end
 
