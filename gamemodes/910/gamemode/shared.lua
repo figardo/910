@@ -75,8 +75,9 @@ end
 
 ---Print 
 ---@param ... string
+local developer = GetConVar("developer")
 function DevPrint(...)
-	if !GetConVar("developer"):GetBool() then return end
+	if !developer:GetBool() then return end
 
 	Msg("[910]")
 	-- table.concat does not tostring, derp

@@ -57,10 +57,11 @@ function GM:SetSuddenDeath(enable)
 end
 
 --  The current map has ended, show the scoreboard ----------------------------
+local mp_chattime = CreateConVar("mp_chattime", "10")
 function GM:StartIntermission()
 	self.bEndGame = true
 
-	self.fIntermissionEnd = CurTime() + GetConVar("mp_chattime"):GetFloat()
+	self.fIntermissionEnd = CurTime() + mp_chattime:GetFloat()
 
 	-- Loop through all players
 	for _, ply in player.Iterator() do

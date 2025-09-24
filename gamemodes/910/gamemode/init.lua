@@ -88,7 +88,8 @@ end
 
 local TimeLimit = GetConVar("mp_timelimit"):GetFloat() * 60 -- Minutes to seconds!
 local startTime = CurTime()
-local FragLimit = CreateConVar("mp_fraglimit", "0"):GetFloat()
+local mp_fraglimit = CreateConVar("mp_fraglimit", "0")
+local mp_teamplay = GetConVar("mp_teamplay")
 
 local cachedTime
 
@@ -178,8 +179,9 @@ function GM:Think()
 		return
 	end
 
+	local FragLimit = mp_fraglimit:GetFloat()
 	if FragLimit > 0 then -- We have a fraglimit!
-		if GetConVar("mp_teamplay"):GetBool() then
+		if mp_teamplay:GetBool() then
 			local NumTeams = #team.GetAllTeams()
 
 			for i = 1, NumTeams do
