@@ -240,6 +240,8 @@ function GM:CreateTeamPanel(parent, id)
 end
 
 function GM:ScoreboardShow()
+	if self.LockScoreboard then return end
+
 	local x = ScrW()
 	local y = ScrH()
 
@@ -356,7 +358,7 @@ function GM:ScoreboardShow()
 end
 
 function GM:ScoreboardHide()
-	if !IsValid(scoreboardPnl) then return end
+	if self.LockScoreboard or !IsValid(scoreboardPnl) then return end
 
 	scoreboardPnl:Remove()
 end

@@ -66,10 +66,25 @@ function GM:StartIntermission()
 	-- Loop through all players
 	for _, ply in player.Iterator() do
 		net.Start("910_ShowScoreboard")
+			net.WriteBool(true)
 		net.Send(ply)
 
 		ply:Freeze(true)
 	end
+end
+
+function GM:StopIntermission()
+	self.bEndGame = false
+
+	for _, ply in player.Iterator() do
+		net.Start("910_ShowScoreboard")
+			net.WriteBool(false)
+		net.Send(ply)
+
+		ply:Freeze(false)
+	end
+
+	self:RoundRestart()
 end
 
 -- might as well grab these from gm12

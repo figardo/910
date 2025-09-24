@@ -390,14 +390,19 @@ local function RPSound()
 end
 net.Receive("910_RPSound", RPSound)
 
-local function ShowScoreboard()
-	GAMEMODE:ScoreboardHide()
-	GAMEMODE:ScoreboardShow()
+function GM:ForceScoreboard(lock)
+	if lock then
+		self:ScoreboardHide()
+		self:ScoreboardShow()
+	end
 
-	GAMEMODE.ScoreboardShow = nil
-	GAMEMODE.ScoreboardHide = nil
+	self.LockScoreboard = lock
+
+	if !lock then
+		self:ScoreboardHide()
+	end
 end
-net.Receive("910_ShowScoreboard", ShowScoreboard)
+net.Receive("910_ShowScoreboard", function() GAMEMODE:ForceScoreboard(net.ReadBool()) end)
 
 function GM:UpdateScore()
 	local tid = net.ReadUInt(2) + 1
